@@ -43,7 +43,7 @@
         <% @changelogs.each do |changelog| %>
           <tr  class="changelog-row">
             <td><%= safe_relative_time(changelog['time']) || "bogus" %></td>
-            <td><%= changelog["digest"] %></td>
+            <td><a href="<%= root_path %>locks/<%= changelog["digest"] %>"><%= changelog["digest"] %></a></td>
             <td><%= changelog["script"] %></td>
             <td><%= changelog["job_id"] %></td>
             <td><%= changelog["prev_jid"] %></td>
