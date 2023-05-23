@@ -127,7 +127,10 @@ module SidekiqUniqueJobs
     #
     def unlock!(conn = nil)
       call_script(:unlock, key.to_a, argv, conn) do |unlocked_jid|
-        reflect(:debug, :unlocked, item, unlocked_jid) if unlocked_jid == job_id
+        if unlocked_jid == job_id
+          reflect(:debug, :unlocked, item, unlocked_jid)
+          reflect(:unlocked, item)
+        end
 
         unlocked_jid
       end
@@ -312,7 +315,7 @@ module SidekiqUniqueJobs
     # @api private
     #
     def rpoplpush(conn)
-      conn.rpoplpush(key.queued, key.primed)
+      conn.lmove(key.queued, key.primed, "RIGHT", "LEFT")
     end
 
     #
